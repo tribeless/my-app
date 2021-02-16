@@ -5,7 +5,10 @@ class MyView3 extends LitElement {
 
   static get properties(){
     return {
-      arr:{type:Array}
+      arr:{type:Array},
+      dictionary:{type:Object},
+      numericResult:{type:Array},
+      asciiResult:{type:Array}
     }
   }
 
@@ -50,15 +53,41 @@ class MyView3 extends LitElement {
   constructor(){
     super();
     this.arr = [];
+    this.dictionary = {
+      '34': 'thirty-four',
+      '90': 'ninety',
+      '91': 'ninety-one',
+      '21': 'twenty-one',
+      '61': 'sixty-one',
+      '9': 'nine',
+      '2': 'two',
+      '6': 'six',
+      '3': 'three',
+      '8': 'eight',
+      '80': 'eighty',
+      '81': 'eighty-one',
+      'Ninety-Nine': '99',
+      'nine-hundred': '900'
+    }
   }
 
    firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
+    //data fetching
     const DATA_URL = 'https://jsonplaceholder.typicode.com/todos?_limit=5';
     fetch(DATA_URL).then(res=>res.json()).then(data=>{
       this.arr = data;
     }).catch(e=>alert('an error occured!'));
+
+    //sorting
+    this.numericResult = Object.keys(this.dictionary).sort((a,b)=>{
+      return a-b;
+    });
+    this.asciiResult = Object.values(this.dictionary).sort((a,b)=>{
+        return a-b;
+    });
   }
+
   render(){
     return html `
         <div class="container">
@@ -71,6 +100,13 @@ class MyView3 extends LitElement {
           `
           )
         }
+        <div class="card-body">
+          <p>Numeric Result : ${JSON.stringify(this.numericResult)}</p>
+        </div>
+        <div class="card-body">
+            <p>Ascii Result : ${JSON.stringify(this.asciiResult)}</p>
+        </div>
+
         </div>
 
     `;
